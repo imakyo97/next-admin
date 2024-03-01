@@ -4,7 +4,7 @@ import React from 'react';
 import { Component } from 'react';
 import buildGraphQLProvider from 'ra-data-graphql-simple';
 import { Admin, DataProvider, Resource } from 'react-admin';
-import { ProgrammerList, ProgrammerEdit } from './programmers';
+import { ProgrammerList, ProgrammerEdit } from './Programmers';
 
 const AdminApp = () => {
     const [dataProvider, setDataProvider] = React.useState<DataProvider | null>(null)
