@@ -4,7 +4,7 @@ import React from 'react';
 import { Component } from 'react';
 import buildGraphQLProvider from 'ra-data-graphql-simple';
 import { Admin, DataProvider, Resource } from 'react-admin';
-import { ClientList, ClientCreate, ClientEdit } from './Clients';
+import clients from './clients'
 
 
 const AdminApp = () => {
@@ -20,7 +20,7 @@ const AdminApp = () => {
 
     return (
         <Admin dataProvider= { dataProvider } >
-            <Resource name="Client" list = { ClientList } create={ ClientCreate } edit={ ClientEdit }/>
+            <Resource name="Client" {...clients} />
         </Admin>
     );
 };
