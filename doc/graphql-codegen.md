@@ -65,6 +65,94 @@ codegen.tsファイルに`ignoreNoDocuments: true`を設定することで、コ
 npm run generate
 ```
 
+## 4. GraphQL操作を定義して、自動生成を実行
+`CodegenConfig`で`documents: ['src/**/*.tsx']`を設定しているため、GraphQL操作をsrc配下の.tsxに定義します  
+以下のようなGraphQL操作を定義しました
+```ts
+import { gql } from "../__generated__";
+
+const GET_CLIENTS = gql ( `   
+    query GetClients {
+        allClients {
+            id
+            name
+            created_at
+            updated_at
+        }
+    }
+` );
+``` 
+
+定義ができたら自動生成を再実行し、GraphQL操作を読み込んだコードを生成します  
+```shell
+npm run generate
+```
+
+## 5. 生成したコードをApolloClientで使う
+ここまで（1. ~ 4.まで）でGraphQL操作を含んだコードを生成することができたので、生成したコードをAplloClientで使ってみます
+
+以下のコマンドでApolloClientをインストール
+```shell
+npm install @apollo/client
+```
+
+useQueryでGraphQLを叩き、レスポンスを表示するクライアントコンポーネントを作成
+```ts
+import { gql } from "../../../__generated__";
+import { useQuery } from "@apollo/client"
+
+const GET_CLIENTS = gql ( `   
+    query GetClients {
+        allClients {
+            id
+            name
+            created_at
+            updated_at
+        }
+    }
+` );
+
+const AllClients = () => {
+    const { loading, error, data } = useQuery(GET_CLIENTS);
+    console.log(data?.allClients)
+  
+    if (loading) return "Loading...";
+  
+    if (error) return `Error! ${error.message}`;
+  
+    return JSON.stringify(data?.allClients);
+};
+
+export default AllClients;
+```
+
+ApolloProviderをルートに持つページ（page.tsx）を作成
+```ts
+"use client"; 
+
+
+import AllClients from "../../components/apollo_client/clients/AllClients";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+
+const client = new ApolloClient({
+    uri: "http://localhost:8000/graphql",
+    cache: new InMemoryCache(),
+});
+
+const TestClient = () => {    
+    return (
+        <ApolloProvider client={client}>
+            <AllClients />
+        </ApolloProvider>
+    )
+}
+
+export default TestClient;
+```
+
+上記の実装でpage.tsxを配置したpathにアクセスすると、レスポンスが表示される  
+今回の場合、app/client/page.tsxなので`http://localhost:3000/client`にアクセスすると画面にレスポンスが表示される
+
 参考:
 - https://www.apollographql.com/tutorials/client-side-graphql-react/05-codegen
 - https://the-guild.dev/graphql/codegen/docs/guides/react-vue
