@@ -20,7 +20,7 @@ import { CodegenConfig } from '@graphql-codegen/cli'
  
 const config: CodegenConfig = {
     schema: 'http://localhost:8000/graphql',
-    documents: ['src/**/*.tsx'],
+    documents: ['src/**/*.ts'],
     generates: {
         './src/__generated__/': {
             preset: 'client',
@@ -40,7 +40,7 @@ graphql-codegenはこのアドレスを参照して、サーバーのスキー�
 ### documents
 graphql-codegenがフロントエンドの型を生成する際に考慮すべきドキュメントを定義する  
 コードはすべてsrcフォルダーに含まれており、srcのすべてのサブフォルダーのファイルも探すようにします    
-最後に、.tsxで終わるファイルのみをスキャンするように設定します  
+最後に、.tsで終わるファイルのみをスキャンするように設定します  
 この設定によりGraphQL操作文字列（query, mutation）が自動生成コードに読み込まれる
 ### generates
 生成したコードをどこに出力するかを定義する    
@@ -67,7 +67,7 @@ npm run generate
 ```
 
 ## 4. GraphQL操作を定義して、自動生成を実行
-`CodegenConfig`で`documents: ['src/**/*.tsx']`を設定しているため、GraphQL操作文字列をsrc配下の.tsxに定義します  
+`CodegenConfig`で`documents: ['src/**/*.ts']`を設定しているため、GraphQL操作文字列をsrc配下の.tsに定義します  
 以下のようなGraphQL操作文字列を定義しました
 ```ts
 import { gql } from "../__generated__";
@@ -96,23 +96,13 @@ npm run generate
 ```shell
 npm install @apollo/client
 ```
-レスポンスを表示するだけのクライアントコンポーネントを作成します  
+次に、レスポンスを表示するだけのクライアントコンポーネントを作成します  
+### クライアントコンポーネント
 クライアントコンポーネントでApolloClientを使用する場合は、useQueryを使用します  
 以下のような、コンポーネントを作成します
 ```ts
-import { gql } from "../../../__generated__";
-import { useQuery } from "@apollo/client"
-
-const GET_CLIENTS = gql ( `   
-    query GetClients {
-        allClients {
-            id
-            name
-            created_at
-            updated_at
-        }
-    }
-` );
+import { useQuery } from "@apollo/client";
+import { GET_CLIENTS } from "../../../gqls/clients";
 
 const AllClients = () => {
     const { loading, error, data } = useQuery(GET_CLIENTS);
@@ -153,6 +143,27 @@ const TestClient = () => {
 export default TestClient;
 ```
 
+### サーバーコンポーネント
+サーバーコンポーネントでApolloClientを使用する場合は、client.queryを使用します  
+以下のような、コンポーネント(page.tsx)を作成します
+```ts
+import { GET_CLIENTS } from "../../gqls/clients";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+
+const client = new ApolloClient({
+    uri: "http://localhost:8000/graphql",
+    cache: new InMemoryCache(),
+});
+
+const TestClient = async () => {
+    const { loading, error, data } = await client.query({ query: GET_CLIENTS }); 
+    return JSON.stringify(data.allClients);
+}
+
+export default TestClient;
+```
+
+### 画面に表示されるか確認
 以上の実装でpage.tsxを配置したpathにアクセスすると、レスポンスが表示されます  
 今回の場合、app/client/page.tsxにページを作成したので`http://localhost:3000/client`にアクセスすることで画面が表示されます
 
