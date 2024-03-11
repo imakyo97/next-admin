@@ -1,8 +1,8 @@
 import { useQuery } from "@apollo/client";
-import { GET_CLIENTS } from "../../../gqls/clients";
+import { GetClientsDocument } from "@/__generated__/graphql";
 
 const AllClients = () => {
-    const { loading, error, data } = useQuery(GET_CLIENTS);
+    const { loading, error, data } = useQuery(GetClientsDocument);
     console.log(data?.allClients)
   
     if (loading) return "Loading...";
