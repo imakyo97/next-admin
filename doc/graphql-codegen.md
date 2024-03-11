@@ -175,3 +175,45 @@ export default TestClient;
 参考:
 - https://www.apollographql.com/tutorials/client-side-graphql-react/05-codegen
 - https://the-guild.dev/graphql/codegen/docs/guides/react-vue
+
+# GraphQL Codegenのバンドルサイズを最適化
+自動生成で作成されたファイル（gql.ts）のコメントにもあるように、preset-clientを使用する場合は`babel`もしくは`swc`を使ってバンドルサイズを最適化する必要があります
+
+> This map has several performance disadvantages:
+> 1. It is not tree-shakeable, so it will include all operations in the project.
+> 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
+> 3. It does not support dead code elimination, so it will add unused operations.
+> 
+> Therefore it is highly recommended to use the babel or swc plugin for production.
+
+## babelとswcどちらを採用するか
+以下の観点からswcを使用します  
+- swcはRustで書かれた高速で最新のJavaScript/TypeScriptコンパイラーである
+- Next.jsではswcが使用されるようになった
+- IEに対応する必要がある場合にbabelが使用されていたが、現状IE対応は不要になった
+
+## swcプラグインの使用方法
+以下のコマンドでプラグインをインストール
+```shell
+npm install -D @graphql-codegen/client-preset-swc-plugin
+```
+
+`next.config.js`に以下の設定を追加
+```js
+const nextConfig = {
+  // ...
+  experimental: {
+    swcPlugins: [
+      [
+        '@graphql-codegen/client-preset-swc-plugin',
+        { artifactDirectory: './src/gql', gqlTagName: 'graphql' }
+      ]
+    ]
+  }
+}
+```
+以上でswcがファイルをコンパイルするときに、プラグインは生成されたコードを自動的に最適化します
+
+参考:
+- https://the-guild.dev/blog/optimize-bundle-size-with-swc-and-graphql-codegen
+- https://www.apollographql.com/docs/react/performance/babel

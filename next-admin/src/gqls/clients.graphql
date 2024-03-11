@@ -1,4 +1,4 @@
-query Clients {
+query GetClients {
     allClients {
         id
         name
