@@ -1,0 +1,8 @@
+mutation updateClient($id: ID!, $clientData: ClientData!) {
+    updateClient(id: $id, client_data: $clientData) {
+        id
+        name
+        created_at
+        updated_at
+    }
+}

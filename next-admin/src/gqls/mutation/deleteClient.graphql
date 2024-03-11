@@ -1,5 +1,5 @@
-query GetClients {
-    allClients {
+mutation deleteClient($id: ID!) {
+    deleteClient(id: $id) {
         id
         name
         created_at

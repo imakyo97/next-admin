@@ -13,7 +13,10 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "query GetClients {\n  allClients {\n    id\n    name\n    created_at\n    updated_at\n  }\n}": types.GetClientsDocument,
+    "mutation createClient($clientData: ClientData!) {\n  createClient(client_data: $clientData) {\n    id\n    name\n    created_at\n    updated_at\n  }\n}": types.CreateClientDocument,
+    "mutation deleteClient($id: ID!) {\n  deleteClient(id: $id) {\n    id\n    name\n    created_at\n    updated_at\n  }\n}": types.DeleteClientDocument,
+    "mutation updateClient($id: ID!, $clientData: ClientData!) {\n  updateClient(id: $id, client_data: $clientData) {\n    id\n    name\n    created_at\n    updated_at\n  }\n}": types.UpdateClientDocument,
+    "query getClients {\n  allClients {\n    id\n    name\n    created_at\n    updated_at\n  }\n}": types.GetClientsDocument,
 };
 
 /**
@@ -33,7 +36,19 @@ export function gql(source: string): unknown;
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "query GetClients {\n  allClients {\n    id\n    name\n    created_at\n    updated_at\n  }\n}"): (typeof documents)["query GetClients {\n  allClients {\n    id\n    name\n    created_at\n    updated_at\n  }\n}"];
+export function gql(source: "mutation createClient($clientData: ClientData!) {\n  createClient(client_data: $clientData) {\n    id\n    name\n    created_at\n    updated_at\n  }\n}"): (typeof documents)["mutation createClient($clientData: ClientData!) {\n  createClient(client_data: $clientData) {\n    id\n    name\n    created_at\n    updated_at\n  }\n}"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "mutation deleteClient($id: ID!) {\n  deleteClient(id: $id) {\n    id\n    name\n    created_at\n    updated_at\n  }\n}"): (typeof documents)["mutation deleteClient($id: ID!) {\n  deleteClient(id: $id) {\n    id\n    name\n    created_at\n    updated_at\n  }\n}"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "mutation updateClient($id: ID!, $clientData: ClientData!) {\n  updateClient(id: $id, client_data: $clientData) {\n    id\n    name\n    created_at\n    updated_at\n  }\n}"): (typeof documents)["mutation updateClient($id: ID!, $clientData: ClientData!) {\n  updateClient(id: $id, client_data: $clientData) {\n    id\n    name\n    created_at\n    updated_at\n  }\n}"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "query getClients {\n  allClients {\n    id\n    name\n    created_at\n    updated_at\n  }\n}"): (typeof documents)["query getClients {\n  allClients {\n    id\n    name\n    created_at\n    updated_at\n  }\n}"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

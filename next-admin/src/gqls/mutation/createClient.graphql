@@ -1,0 +1,8 @@
+mutation createClient($clientData: ClientData!) {
+    createClient(client_data: $clientData) {
+        id
+        name
+        created_at
+        updated_at
+    }
+}
