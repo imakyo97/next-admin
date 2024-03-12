@@ -1,5 +1,9 @@
 import { useMutation } from "@apollo/client";
 import { DeleteClientDocument } from "@/__generated__/graphql";
+import {
+    Button,
+    Stack,
+} from "@mui/material";
 
 const DeleteClient = () => {
     let inputId: HTMLInputElement;
@@ -12,32 +16,23 @@ const DeleteClient = () => {
   
     return (
         <>
-            <div>
-              <form
-                onSubmit={e => {
-                  e.preventDefault();
-                  updateClient({ variables: {id: inputId.value} });
-                  inputId.value = '';
-                }}
-              >
-                <ul>
-                    <li>
-                        <label>id</label>
-                        <input
-                          placeholder="id"
-                          ref={node => {
-                            if (node != null) {
-                                inputId = node;
-                            }
-                          }}
-                        />
-                    </li>
-                    <li>
-                        <button type="submit">delete client</button>
-                    </li>
-                </ul>
-              </form>
-            </div>
+            <Stack direction="row" spacing={2}>
+                <label>id</label>
+                <input
+                  placeholder="id"
+                  ref={node => {
+                    if (node != null) {
+                        inputId = node;
+                    }
+                  }}
+                />
+            </Stack>
+            <Button variant="contained" onClick={() => {
+                updateClient({ variables: {id: inputId.value} });
+                inputId.value = '';
+            }}>
+                clientを削除
+            </Button>
             <div>{JSON.stringify(data?.deleteClient)}</div>
         </>
       );
