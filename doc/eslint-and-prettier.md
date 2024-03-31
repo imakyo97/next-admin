@@ -148,4 +148,103 @@ module.exports = {
 
 参考：[eslint-plugin-prettier(github)](https://github.com/prettier/eslint-plugin-prettier?tab=readme-ov-file)
 
-###
+### eslint-plugin-unused-import
+
+[eslint-plugin-unused-import](https://www.npmjs.com/package/eslint-plugin-unused-imports)は未使用の import を見つけて削除します。
+
+私はプラグインを入れただけだと未使用の import を見つけて削除することはできず、実際には`eslint --fix`を実行するかまたは settings.json で`"source.fixAll.eslint": "always"`を設定する必要がありました。
+
+以下のコマンドでパッケージをインストールします
+
+```shell
+npm i -D eslint-plugin-unused-imports
+```
+
+インストールができたら`.eslintrc.js`に以下の設定を追加します
+
+```diff
+module.exports = {
+  root: true,
+  parser: "@typescript-eslint/parser",
+  extends: [
+    "plugin:@typescript-eslint/recommended",
+    "next/core-web-vitals",
+    "plugin:prettier/recommended",
+  ],
++  plugins: ["@typescript-eslint", "unused-imports"],
++  rules: {
++    "@typescript-eslint/no-unused-vars": "off",
++    "unused-imports/no-unused-imports": "error",
++    "unused-imports/no-unused-vars": [
++      "warn",
++      {
++        vars: "all",
++        varsIgnorePattern: "^_",
++        args: "after-used",
++        argsIgnorePattern: "^_",
++      },
++    ],
++  },
+};
+```
+
+参考：[eslint-plugin-unused-imports(github)](https://github.com/sweepline/eslint-plugin-unused-imports)
+
+### eslint-plugin-import
+
+### eslint-import-resolver-alias
+
+## husky と lint-staged の設定
+
+husky と lint-staged を使用してコミット前に lint を強制するようにします  
+lint を強制することにより lint を通過しないコードは commit できないようにします
+
+[husky](https://typicode.github.io/husky/)とは、Git フックで任意のプログラムを実行するための npm ライブラリです  
+[lint-staged](https://github.com/lint-staged/lint-staged)とは、ステージングされたファイルに対して lint を実行するための npm ライブラリです
+
+以下のコマンドでパッケージをインストールします
+
+```shell
+npm i -D husky lint-staged
+```
+
+パッケージがインストールできたら以下を実行します
+
+```shell
+npx husky init
+```
+
+すると`package.json`に以下が追加されます。
+
+```diff
+  "scripts": {
+    ...
++    "prepare": "husky"
+  },
+```
+
+次に .husky/pre-commit で lint-staged を実行するように設定します  
+まず、package.json を以下のように修正します
+
+```diff
+  "scripts": {
+    ...
++    "lint-staged": "lint-staged"
+  },
+  ...
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx}": [
+      "eslint"
+    ]
+  }
+```
+
+追加できたので、.husky/pre-commit を`npm run lint-staged`に修正します
+
+```shell
+echo "npm run lint-staged" > .husky/pre-commit
+```
+
+これで`git commit`時にステージングされた`js,ts,jsx,tsx`に対して ESLint を実行できるようになります
+
+参考：[【2024/01 最新】husky + lint-staged でコミット前に lint を強制する方法](https://zenn.dev/risu729/articles/latest-husky-lint-staged)
