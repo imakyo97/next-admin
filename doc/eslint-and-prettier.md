@@ -192,7 +192,68 @@ module.exports = {
 
 ### eslint-plugin-import
 
-### eslint-import-resolver-alias
+[eslint-plugin-import](https://www.npmjs.com/package/eslint-plugin-import)は import のファイルパスや import 名のスペルミスをチェックします
+
+eslint-plugin-import と合わせて eslint-import-resolver-alias もインストールし、パスエイリアスを設定します
+
+以下のコマンドでパッケージをインストールします
+
+```shell
+npm i -D eslint-plugin-import eslint-import-resolver-alias
+```
+
+インストールができたら`.eslintrc.js`に以下の設定を追加します
+
+```diff
+const path = require("path");
+
+module.exports = {
+  ...
++  settings: {
++    "import/resolver": {
++      alias: {
++        map: [
++          ["generated", path.resolve(__dirname, "./src/__generated__")],
++          ["app", path.resolve(__dirname, "./src/app")],
++          ["components", path.resolve(__dirname, "./src/components")],
++          ["generated_rest", path.resolve(__dirname, "./src/generated_rest")],
++          ["gqls", path.resolve(__dirname, "./src/gqls")],
++        ],
++        extensions: [".ts", ".tsx", ".js", ".jsx"],
++      },
++    },
++    "import/ignore": "node_modules",
++  },
+  ...
+  rules: {
+    ...
++    "import/order": [
++      "error",
++      {
++        groups: [
++          "builtin",
++          "external",
++          "internal",
++          "sibling",
++          "parent",
++          "index",
++        ],
++        "newlines-between": "always",
++        alphabetize: {
++          order: "asc",
++          caseInsensitive: true,
++        },
++      },
++    ],
+  },
+};
+```
+
+参考:
+
+- [eslint-plugin-import](https://www.npmjs.com/package/eslint-plugin-import)
+- [eslint-import-resolver-alias](https://www.npmjs.com/package/eslint-import-resolver-alias)
+- [Next.js で import の alias を貼るのに割とハマった話](https://qiita.com/282Haniwa/items/76d56a6a7e9d0db95a33#%E3%81%BE%E3%81%A8%E3%82%81)
 
 ## husky と lint-staged の設定
 
