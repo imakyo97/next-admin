@@ -7,6 +7,7 @@ module.exports = {
     "import/resolver": {
       alias: {
         map: [
+          ["src", path.resolve(__dirname, "./src")],
           ["generated", path.resolve(__dirname, "./src/__generated__")],
           ["app", path.resolve(__dirname, "./src/app")],
           ["components", path.resolve(__dirname, "./src/components")],

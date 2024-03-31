@@ -254,6 +254,7 @@ module.exports = {
 - [eslint-plugin-import](https://www.npmjs.com/package/eslint-plugin-import)
 - [eslint-import-resolver-alias](https://www.npmjs.com/package/eslint-import-resolver-alias)
 - [Next.js で import の alias を貼るのに割とハマった話](https://qiita.com/282Haniwa/items/76d56a6a7e9d0db95a33#%E3%81%BE%E3%81%A8%E3%82%81)
+- [Configure ESLint, Prettier and path aliases with Next.js](https://dev.to/luis_sserrano/configure-eslint-prettier-and-path-aliases-with-nextjs-37do)
 
 ## husky と lint-staged の設定
 
